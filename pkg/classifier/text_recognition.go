@@ -4,7 +4,22 @@ import (
 	"tesla_go/internal/domain"
 )
 
-func ProcessSentences(sentenceCollection []domain.Sentence) []domain.Sentence {
+type TextRecognizer struct {
+	knownSentences   []domain.Sentence
+	unknownSentences []domain.Sentence
+}
+
+func NewTextRecognizer(
+	knownSentences []domain.Sentence,
+	unknownSentences []domain.Sentence,
+) *TextRecognizer {
+	return &TextRecognizer{
+		knownSentences:   knownSentences,
+		unknownSentences: unknownSentences,
+	}
+}
+
+func ProcessSentences(preparedSentences []domain.Sentence) []domain.Sentence {
 	return nil
 }
 
