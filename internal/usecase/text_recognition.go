@@ -6,8 +6,8 @@ import (
 
 type ClassificationUseCase struct{}
 
-type ClassificationManagement interface {
-	ProcessSentences(sentenceCollection []domain.Sentence) []domain.Sentence
+type TextClassification interface {
+	ProcessSentences(preparedSentences []domain.Sentence) []domain.Sentence
 	GroupSentences(processedSentences []domain.Sentence) error
 	GetMainContext(recognizedSentences []domain.Sentence) []string
 }
