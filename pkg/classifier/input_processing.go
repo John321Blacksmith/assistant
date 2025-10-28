@@ -1,8 +1,8 @@
 package classifier
 
 import (
+	"osint_agent/internal/domain"
 	"strings"
-	"tesla_go/internal/domain"
 )
 
 // this actor performs

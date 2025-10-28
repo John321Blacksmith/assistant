@@ -1,7 +1,7 @@
 package classifier
 
 import (
-	"tesla_go/internal/domain"
+	"osint_agent/internal/domain"
 )
 
 type TextRecognizer struct {
@@ -19,8 +19,8 @@ func NewTextRecognizer(
 	}
 }
 
-func ProcessSentences(preparedSentences []domain.Sentence) []domain.Sentence {
-	return nil
+func ProcessSentences(preparedSentences []domain.Sentence) ([]domain.Sentence, error) {
+	return nil, nil
 }
 
 func GroupSentences(processedSentences []domain.Sentence) error {

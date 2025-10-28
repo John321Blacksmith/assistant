@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"tesla_go/internal/domain"
+	"osint_agent/internal/domain"
 )
 
 type InputManagement interface {
