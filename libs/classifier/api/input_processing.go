@@ -1,22 +1,8 @@
-package classifier
+package api
 
 import (
-	"osint_agent/internal/domain"
 	"strings"
 )
-
-// this actor performs
-// input processing
-// work and prepares
-// sentences for further
-// classification
-type InputManager struct{}
-
-// implement new
-// input manager
-func NewInputManager() *InputManager {
-	return &InputManager{}
-}
 
 // check the symbol
 // if it's alphabetic
@@ -28,9 +14,9 @@ func isAlpha(sym byte) bool {
 // receive the data
 // from the external client
 // and split to sentences
-func (m *InputManager) SplitToParticles(data string) []string {
+func SplitToParticles(data, sym string) []string {
 	if len(data) != 0 {
-		sentences := strings.Split(data, ".")
+		sentences := strings.Split(data, sym)
 		return sentences
 	}
 	return nil
@@ -75,7 +61,7 @@ func refineMembers(sentence string) []string {
 // check each word for
 // having a non alphabetic
 // symbol
-func (m *InputManager) RefineSentences(sentences []string) [][]string {
+func RefineSentences(sentences []string) [][]string {
 	var refinedSentences [][]string
 	if len(sentences) != 0 {
 		for i := range len(sentences) {
@@ -89,16 +75,13 @@ func (m *InputManager) RefineSentences(sentences []string) [][]string {
 // format every string
 // into the sentence
 // object
-func (m *InputManager) AggregateSentences(refinedSentences [][]string) []domain.Sentence {
-	sentenceCollection := []domain.Sentence{}
+func AggregateSentences(refinedSentences [][]string) []map[string][]string {
+	sentenceCollection := []map[string][]string{}
 
 	for _, v := range refinedSentences {
 		sentenceCollection = append(
 			sentenceCollection,
-			domain.Sentence{
-				Category:    "unknown",
-				LiteralData: v,
-			},
+			map[string][]string{"unknown": v},
 		)
 	}
 	return sentenceCollection

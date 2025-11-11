@@ -1,14 +1,13 @@
-package classifier
+package api
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"osint_agent/internal/domain"
 )
 
-func LoadDataset(filename string) ([]domain.Category, error) {
-	var dataset []domain.Category
+func LoadDataset(filename string) ([]map[string][]string, error) {
+	var dataset []map[string][]string
 	// form contents of the file to bytes
 	file_bytes, err := os.ReadFile(filename)
 	if err != nil {
@@ -25,6 +24,6 @@ func LoadDataset(filename string) ([]domain.Category, error) {
 	return nil, err
 }
 
-func UpdateDataSet(object map[string]domain.Category) error {
+func UpdateDataSet(object map[string][]string) error {
 	return nil
 }
