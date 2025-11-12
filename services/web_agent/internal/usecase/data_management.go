@@ -24,7 +24,7 @@ func (uc *DataUseCase) LoadDataset() ([]map[string][]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	return categories, nil
+	return categories.Categories, nil
 }
 
 func UpdateDataset(object map[string][]string) error {

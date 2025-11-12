@@ -1,7 +1,7 @@
 {
     "environment": "local",
     "parsing": {
-        "datasetLocation": "categories.json"
+        "datasetLocation": "../../categories.json"
     },
     "http": {
         "host": "localhost",
