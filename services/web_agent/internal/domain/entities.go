@@ -7,14 +7,6 @@ import (
 	"time"
 )
 
-// Struct Category represents
-// a category entity with its
-// name and properties.
-type Category struct {
-	Label    string
-	Patterns []string
-}
-
 // Struct Sentence represents
 // a sentence entity with its
 // defined category and contents.

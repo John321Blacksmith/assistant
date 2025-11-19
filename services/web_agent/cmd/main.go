@@ -3,12 +3,10 @@
 package main
 
 import (
-	// "log"
-	// "os"
-	// "osint_agent/services/web_agent/cmd/engine"
-	// "osint_agent/services/web_agent/internal/adapter/config"
-	"fmt"
-	"osint_agent/libs/classifier/api"
+	"log"
+	"os"
+	"osint_agent/services/web_agent/cmd/engine"
+	"osint_agent/services/web_agent/internal/adapter/config"
 )
 
 func main() {
@@ -17,30 +15,26 @@ func main() {
 	// 		  because of it's taste/ and unique, nutrient/ features/.`
 
 	// load configs
-	// cfgPath := os.Getenv("CONFIG_PATH")
-	// cfg, err := config.LoadConfig(cfgPath)
+	cfgPath := os.Getenv("CONFIG_PATH")
+	cfg, err := config.LoadConfig(cfgPath)
 
-	// if err != nil {
-	// 	log.Fatalf("Cannot load settings and start the service \"web_agent\": %v", err)
-	// }
-
-	// // implement engine
-	// engine, err := engine.NewEngine(cfg)
-	// if err != nil {
-	// 	log.Fatalf("Cannot start the engine because: %v", err)
-	// }
-
-	// // start the engine
-	// errChan := engine.Run()
-	dataset, err := api.LoadDataset("../../categories.json")
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("Cannot load settings and start the service \"web_agent\": %v", err)
 	}
-	fmt.Println(dataset)
-	// // error check
-	// potentialError := <-errChan
-	// if potentialError != nil {
-	// 	log.Fatalf("Error occurred during the engine startup: %v", err)
-	// }
+
+	// implement engine
+	engine, err := engine.NewEngine(cfg)
+	if err != nil {
+		log.Fatalf("Cannot start the engine because: %v", err)
+	}
+
+	// start the engine
+	errChan := engine.Run()
+
+	// error check
+	potentialError := <-errChan
+	if potentialError != nil {
+		log.Fatalf("Error occurred during the engine startup: %v", err)
+	}
 
 }

@@ -1,11 +1,11 @@
 package usecase
 
 import (
-	"osint_agent/libs/classifier/api"
+	classifierApi "osint_agent/libs/classifier/api"
 )
 
 type ClassificationUseCase struct {
-	dataset []map[string][]string
+	dataset *classifierApi.DataSet
 }
 
 type TextClassification interface {
@@ -14,14 +14,14 @@ type TextClassification interface {
 	GetMainContext(recognizedSentences []map[string][]string) []string
 }
 
-func NewClassificationUseCase(dataset []map[string][]string) *ClassificationUseCase {
+func NewClassificationUseCase(dataset *classifierApi.DataSet) *ClassificationUseCase {
 	return &ClassificationUseCase{
 		dataset: dataset,
 	}
 }
 
 func ProcessSentences(sentenceCollection []map[string][]string) ([]map[string][]string, error) {
-	processedSentences, err := api.ProcessSentences(sentenceCollection)
+	processedSentences, err := classifierApi.ProcessSentences(sentenceCollection)
 	if err != nil {
 		return nil, err
 	}

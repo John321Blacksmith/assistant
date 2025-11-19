@@ -19,12 +19,12 @@ func NewDataUseCase(datasetLocation string) *DataUseCase {
 	}
 }
 
-func (uc *DataUseCase) LoadDataset() ([]map[string][]string, error) {
-	categories, err := classifierApi.LoadDataset(uc.DatasetLocation)
+func (uc *DataUseCase) LoadDataset() (*classifierApi.DataSet, error) {
+	dataset, err := classifierApi.LoadDataset(uc.DatasetLocation)
 	if err != nil {
 		return nil, err
 	}
-	return categories.Categories, nil
+	return dataset, nil
 }
 
 func UpdateDataset(object map[string][]string) error {
