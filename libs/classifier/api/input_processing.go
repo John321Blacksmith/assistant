@@ -6,7 +6,7 @@ import (
 
 // check the symbol
 // if it's alphabetic
-func isAlpha(sym byte) bool {
+func IsAlpha(sym byte) bool {
 	return (sym >= 65 && sym <= 90) ||
 		(sym >= 97 && sym <= 122)
 }
@@ -24,12 +24,12 @@ func SplitToParticles(data, sym string) []string {
 
 // check each sentence member
 // if it's a proper word
-func refineMember(member string) string {
+func RefineMember(member string) string {
 	var refinedMember string
 	var ind int
 	for i := range len(member) {
 		letter := member[i]
-		if !isAlpha(letter) {
+		if !IsAlpha(letter) {
 			ind = strings.Index(member, string(letter))
 		}
 	}
@@ -43,16 +43,16 @@ func refineMember(member string) string {
 
 // split a sentence to
 // members
-func splitToMembers(sentence string) []string {
+func SplitToMembers(sentence string) []string {
 	members := strings.Split(sentence, " ")
 	return members
 }
 
-func refineMembers(sentence string) []string {
+func RefineMembers(sentence string) []string {
 	var refinedMembers []string
-	members := splitToMembers(strings.TrimSpace(sentence))
+	members := SplitToMembers(strings.TrimSpace(sentence))
 	for i := range len(members) {
-		refinedMember := refineMember(members[i])
+		refinedMember := RefineMember(members[i])
 		refinedMembers = append(refinedMembers, refinedMember)
 	}
 	return refinedMembers
@@ -65,7 +65,7 @@ func RefineSentences(sentences []string) [][]string {
 	var refinedSentences [][]string
 	if len(sentences) != 0 {
 		for i := range len(sentences) {
-			refinedMembers := refineMembers(sentences[i])
+			refinedMembers := RefineMembers(sentences[i])
 			refinedSentences = append(refinedSentences, refinedMembers)
 		}
 	}
