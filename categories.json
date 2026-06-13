@@ -1,4 +1,5 @@
-[
+{
+  "categories": [
   {
     "label": "sport",
     "patterns": [
@@ -210,3 +211,4 @@
     ]
   }
 ]
+}
