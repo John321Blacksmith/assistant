@@ -72,12 +72,32 @@ func (entity *KnownData) AddSentence(sentence Sentence) {
 // []Sentence
 func (entity *KnownData) GetMainConext() string {
 	var contexts []string
+	var mainContext string
 	for _, s := range entity.sentences {
 		contexts = append(contexts, s.mainContext)
 	}
-	fmt.Println("Contexts: ", contexts)
+	var freqMap map[string]int = map[string]int{}
 
-	return ""
+	for _, ctx := range contexts {
+		if _, exists := freqMap[ctx]; !exists {
+			freqMap[ctx] = 1
+		} else {
+			freqMap[ctx] += 1
+		}
+	}
+
+	var greatestCxt string
+	var greatestFreq int
+	for ctx, freq := range freqMap {
+		if freq > greatestFreq {
+			greatestCxt = ctx
+			greatestFreq = freq
+		}
+	}
+
+	mainContext = greatestCxt
+
+	return mainContext
 }
 
 type UnknownData struct {
