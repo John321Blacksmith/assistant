@@ -8,33 +8,21 @@ import (
 	"classifier/engine"
 	"fmt"
 	"log"
-	"strings"
 )
 
-func printSentences(sentences []engine.Sentence) {
-	for i := range len(sentences) {
-		data, err := sentences[i].GetData()
-		if err != nil {
-			fmt.Printf("Empty sentence: %v", i)
-		}
-		fmt.Println("Context: ", sentences[i].GetMainContext())
-		fmt.Printf("data: %s\n\n", strings.Join(data, " "))
-	}
-}
-
-func printKnownSentences(classifier *engine.Classifier) {
-}
+// func printSentences(sentences []engine.Sentence) {
+// 	for i := range len(sentences) {
+// 		fmt.Println("Context: ", sentences[i].GetMainContext())
+// 		fmt.Printf("data: %s\n\n", strings.Join(sentences[i].GetData(), " "))
+// 	}
+// }
 
 func main() {
-	rawText := `As the gigantic space exploration startup barreled toward a
-				public listing after 24 years as a private company, the urgency
-				was apparent. The acquisition of a $250 billion artificial
-				intelligence company in the middle of the process?
-				Don’t let it slow you down. Why have everyone wait late
-				into the evening for the final terms? Instead,
-				close the deal during market hours.
-				`
-
+	rawText := `tire, фитн, gym, muscle, water, форма, спорт, вода, мышmuscle, график, run, exercis, schedule, упражн, питат, nutri, здоров, sport, shape, health, rest. income, cowork, friend, routine, factor, рутина`
+	// rawText2 := `hour, work, finish, tommorow, график, коллег, рабо, weekday. schedule, salary, босс, будни, зарплата, collegue, collegues, офис, yesterday. director, cрок, office, шеф, завод, chief, weekdaywork, project, deadline, boss, доход`
+	// rawText := `The European Central Bank must be prepared for inflation that’s been unleashed by the conflict in the Middle East but is yet to be felt, according to Chief Economist Philip Lane.
+	// 		The ECB raised interest rates last week for the first time since 2023, warning that war-driven inflation is widening beyond just energy — a message repeated on Monday by President Christine Lagarde. Investors and economists still expect at least one more quarter-point hike, to 2.5%, with price gains to stay well above the 2% goal for some time.
+	// `
 	dataManager := engine.NewNewDataManager("./categories.json")
 	dataset, err := dataManager.LoadDataset()
 	if err != nil {
@@ -43,5 +31,5 @@ func main() {
 	classifier := engine.NewClassifier(dataset)
 	sentences := classifier.ProcessInput(rawText)
 	classifier.RecognizeSentences(sentences)
-	printKnownSentences(classifier)
+	fmt.Println(classifier.GetMainContext())
 }

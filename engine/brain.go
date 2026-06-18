@@ -16,21 +16,40 @@ type DataSet struct {
 	Categories []Category `json:"categories"`
 }
 
+func (entity *DataSet) Refine() *RefinedDataSet {
+	var categories []RefinedCategory
+	for _, cat := range entity.Categories {
+		var uniquePatterns map[string]bool = map[string]bool{}
+		for _, pattern := range cat.Patterns {
+			uniquePatterns[pattern] = true
+		}
+		categories = append(categories, RefinedCategory{Label: cat.Label, Patterns: uniquePatterns})
+	}
+	return &RefinedDataSet{Categories: categories}
+
+}
+
 type Category struct {
 	Label    string   `json:"label"`
 	Patterns []string `json:"patterns"`
 }
 
+type RefinedDataSet struct {
+	Categories []RefinedCategory
+}
+
+type RefinedCategory struct {
+	Label    string
+	Patterns map[string]bool
+}
+
 type Sentence struct {
-	data        []string
+	data        *UniqueElements
 	mainContext string
 }
 
-func (entity *Sentence) GetData() ([]string, error) {
-	if len(entity.data) != 0 {
-		return entity.data, nil
-	}
-	return nil, fmt.Errorf("No content found")
+func (entity *Sentence) GetData() map[string]bool {
+	return entity.data.data
 }
 
 func (entity *Sentence) GetMainContext() string {
@@ -45,18 +64,24 @@ type KnownData struct {
 	sentences []Sentence
 }
 
+func (entity *KnownData) AddSentence(sentence Sentence) {
+	entity.sentences = append(entity.sentences, sentence)
+}
+
 // Find the main context of the known
 // []Sentence
 func (entity *KnownData) GetMainConext() string {
+	var contexts []string
+	for _, s := range entity.sentences {
+		contexts = append(contexts, s.mainContext)
+	}
+	fmt.Println("Contexts: ", contexts)
+
 	return ""
 }
 
 type UnknownData struct {
 	sentences []Sentence
-}
-
-type UniqueElements struct {
-	data []string
 }
 
 // Define central Behaviors
@@ -78,7 +103,7 @@ type DataManagement interface {
 
 // Classification implementation
 type Classifier struct {
-	dataSet     DataSet
+	dataSet     *RefinedDataSet
 	mainContext string
 	knownData   KnownData
 	unknownData UnknownData
@@ -86,7 +111,7 @@ type Classifier struct {
 
 // instantiate a new Classifier object
 // with a dataset provided
-func NewClassifier(dataSet DataSet) *Classifier {
+func NewClassifier(dataSet *RefinedDataSet) *Classifier {
 	return &Classifier{dataSet: dataSet}
 }
 
@@ -97,7 +122,8 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 	rawSentences := strings.Split(strings.Trim(strings.ToLower(rawData), "."), ". ")
 	if len(rawSentences) != 0 {
 		for i := range len(rawSentences) {
-			refinedSentence := Sentence{mainContext: "unknown"}
+			data := NewUniqueElements()
+			refinedSentence := Sentence{mainContext: "unknown", data: data}
 			rawSentence := strings.Split(rawSentences[i], " ")
 			if len(rawSentence) != 0 {
 				for _, w := range rawSentence {
@@ -108,7 +134,7 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 						}
 					}
 					refinedWord := strings.Join(refinedLiterals, "")
-					refinedSentence.data = append(refinedSentence.data, refinedWord)
+					refinedSentence.data.AddLiteral(refinedWord)
 				}
 			}
 			refinedSentences = append(refinedSentences, refinedSentence)
@@ -139,17 +165,41 @@ func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 	//			- Othervice, put the one to the UnknownData.sentences
 	if len(sentences) != 0 {
 		for i := range len(sentences) {
-			var frequencyDict map[string]int
+			var freqMap map[string]int = map[string]int{}
+			objectPatterns := NewUniqueElements()
 			// uow.dataSet.categories[n].label (compare) sentences[i].data
-			for _, cat := range uow.dataSet.Categories {
-				for _, l_w := range sentences[i].data {
-					for _, pattern := cat.Patterns {
-						// - Form an array of the patterns from the Category.Patterns, occurred in a Sentence.data
+			for l_w := range sentences[i].data.data {
+				for _, cat := range uow.dataSet.Categories {
+					for pattern := range cat.Patterns {
+						// - Populate an array of the patterns from the Category.Patterns, occurred in a Sentence.data
+						if strings.Contains(l_w, pattern) {
+							objectPatterns.AddLiteral(pattern)
+						}
 					}
 				}
 			}
+			for _, cat := range uow.dataSet.Categories {
+				freqMap[cat.Label] = len(objectPatterns.Intersection(cat.Patterns))
+			}
+			fmt.Printf("freqMap for the sentence #%d: %v\n\n\n", i, freqMap)
+			// Find the category with the highest cardinal
+			var greatestCat string
+			var greatestCard int
+			for cat, cardinal := range freqMap {
+				if cardinal > greatestCard {
+					greatestCat = cat
+					greatestCard = cardinal
+				}
+			}
+			sentences[i].SetMainContext(greatestCat)
+
+			//3. Separate []Sentence to known and uknown
+			if sentences[i].GetMainContext() != "unknown" {
+				uow.knownData.AddSentence(sentences[i])
+			}
 		}
 	}
+
 	return nil
 }
 
@@ -170,15 +220,16 @@ func NewNewDataManager(datasetPath string) *DataManager {
 
 // load the dataset from the storage using
 // the provided path
-func (uow *DataManager) LoadDataset() (DataSet, error) {
+func (uow *DataManager) LoadDataset() (*RefinedDataSet, error) {
 	var dataSet DataSet
 
 	binary, err := os.ReadFile(uow.datasetPath)
 	if err != nil {
-		return DataSet{}, err
+		return &RefinedDataSet{}, err
 	}
 	err = json.Unmarshal(binary, &dataSet)
-	return dataSet, nil
+
+	return dataSet.Refine(), nil
 }
 
 // update an existing dataset
