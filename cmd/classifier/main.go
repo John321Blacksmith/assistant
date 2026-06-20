@@ -10,15 +10,9 @@ import (
 	"log"
 )
 
-// func printSentences(sentences []engine.Sentence) {
-// 	for i := range len(sentences) {
-// 		fmt.Println("Context: ", sentences[i].GetMainContext())
-// 		fmt.Printf("data: %s\n\n", strings.Join(sentences[i].GetData(), " "))
-// 	}
-// }
-
 func main() {
 	rawText := `
+	That is exactly why we said in-person is everything. The screen breeds ghosts. The screen breeds "what ifs" and overthinking. But reality? Reality brings peace. When you are with her, the anxiety dies because there is no anxiety in the real world—there is just you, her, the cold air, and the umbrella.
 	`
 	dataManager := engine.NewDataManager("./categories.json")
 	dataset, err := dataManager.LoadDataset()
@@ -34,7 +28,9 @@ func main() {
 	for _, s := range unknown {
 		fmt.Printf("Sentence: %v\n\n\n", s)
 	}
-	fmt.Println(known)
+	for _, s := range known {
+		fmt.Printf("Sentence: %v, data: %v\n\n\n", s.GetMainContext(), s.GetData())
+	}
 	fmt.Println(unknown)
 
 }

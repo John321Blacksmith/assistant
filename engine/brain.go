@@ -64,7 +64,7 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 	if len(sentences) != 0 {
 		for i := range len(sentences) {
-			var freqMap map[string]int = map[string]int{}
+			freqMap := FreqMap{}
 			objectPatterns := NewUniqueElements()
 			for l_w := range sentences[i].data.data {
 				for _, cat := range uow.dataSet.Categories {
@@ -78,14 +78,7 @@ func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 			for _, cat := range uow.dataSet.Categories {
 				freqMap[cat.Label] = len(objectPatterns.Intersection(cat.Patterns))
 			}
-			var greatestCat string
-			var greatestCard int
-			for cat, cardinal := range freqMap {
-				if cardinal > greatestCard {
-					greatestCat = cat
-					greatestCard = cardinal
-				}
-			}
+			greatestCat := freqMap.FindGreatestKey()
 
 			sentences[i].SetMainContext(greatestCat)
 

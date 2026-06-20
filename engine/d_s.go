@@ -75,7 +75,7 @@ func (ds *KnownData) GetMainConext() string {
 	for _, s := range ds.sentences {
 		contexts = append(contexts, s.mainContext)
 	}
-	var freqMap map[string]int = map[string]int{}
+	freqMap := FreqMap{}
 
 	for _, ctx := range contexts {
 		if _, exists := freqMap[ctx]; !exists {
@@ -85,16 +85,9 @@ func (ds *KnownData) GetMainConext() string {
 		}
 	}
 
-	var greatestCxt string
-	var greatestFreq int
-	for ctx, freq := range freqMap {
-		if freq > greatestFreq {
-			greatestCxt = ctx
-			greatestFreq = freq
-		}
-	}
+	greatestCtx := freqMap.FindGreatestKey()
 
-	mainContext = greatestCxt
+	mainContext = greatestCtx
 
 	return mainContext
 }
@@ -113,4 +106,19 @@ func (ds *UnknownData) AddSentence(sentence Sentence) {
 
 func (ds *UnknownData) PresentData() []Sentence {
 	return ds.sentences
+}
+
+type FreqMap map[string]int
+
+func (ds FreqMap) FindGreatestKey() string {
+	var greatestKey string
+	var greatestVal int
+
+	for k, v := range ds {
+		if v > greatestVal {
+			greatestKey = k
+			greatestVal = v
+		}
+	}
+	return greatestKey
 }
