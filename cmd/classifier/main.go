@@ -12,7 +12,8 @@ import (
 
 func main() {
 	rawText := `
-	That is exactly why we said in-person is everything. The screen breeds ghosts. The screen breeds "what ifs" and overthinking. But reality? Reality brings peace. When you are with her, the anxiety dies because there is no anxiety in the real world—there is just you, her, the cold air, and the umbrella.
+	Capital Croissant makes 10,000 pastries a week in its bakery in Ealing, West London, supplying luxury hotels and cafes across the capital with frozen croissants and pains au chocolat. Francois Bonnefoy started the company in November, calling himself “the owner and co-founder, but also the delivery driver, the packer — everything.”
+	Tracking the manufacture of Bonnefoy’s viennoiserie gives an insight into the possible rise of food inflation started by the war in the Middle East. The baker sits close to the end of an international supply chain that’s come under enormous pressure over the past few months.
 	`
 	dataManager := engine.NewDataManager("./categories.json")
 	dataset, err := dataManager.LoadDataset()
@@ -24,12 +25,8 @@ func main() {
 	classifier.RecognizeSentences(sentences)
 	fmt.Println(classifier.GetMainContext())
 	unknown := engine.GetUnknownData(classifier)
-	known := engine.GetKnownData(classifier)
 	for _, s := range unknown {
-		fmt.Printf("Sentence: %v\n\n\n", s)
-	}
-	for _, s := range known {
-		fmt.Printf("Sentence: %v, data: %v\n\n\n", s.GetMainContext(), s.GetData())
+		fmt.Printf("Sentence: %v\n\n\n", s.GetData())
 	}
 	fmt.Println(unknown)
 

@@ -8,7 +8,7 @@ func NewUniqueElements() *UniqueElements {
 	return &UniqueElements{data: map[string]bool{}}
 }
 
-func (ds *UniqueElements) AddLiteral(items ...string) {
+func (ds *UniqueElements) AddElement(items ...string) {
 	for _, item := range items {
 		ds.data[item] = true
 	}
@@ -71,25 +71,21 @@ func (ds *KnownData) AddSentence(sentence Sentence) {
 // []Sentence
 func (ds *KnownData) GetMainConext() string {
 	var contexts []string
-	var mainContext string
 	for _, s := range ds.sentences {
 		contexts = append(contexts, s.mainContext)
 	}
-	freqMap := FreqMap{}
+	data := make(map[string]int)
+	freqMap := FreqMap{data}
 
 	for _, ctx := range contexts {
-		if _, exists := freqMap[ctx]; !exists {
-			freqMap[ctx] = 1
+		if _, exists := freqMap.data[ctx]; !exists {
+			freqMap.data[ctx] = 1
 		} else {
-			freqMap[ctx] += 1
+			freqMap.data[ctx] += 1
 		}
 	}
 
-	greatestCtx := freqMap.FindGreatestKey()
-
-	mainContext = greatestCtx
-
-	return mainContext
+	return freqMap.FindGreatestKey()
 }
 
 func (ds *KnownData) PresentData() []Sentence {
@@ -108,13 +104,15 @@ func (ds *UnknownData) PresentData() []Sentence {
 	return ds.sentences
 }
 
-type FreqMap map[string]int
+type FreqMap struct {
+	data map[string]int
+}
 
 func (ds FreqMap) FindGreatestKey() string {
 	var greatestKey string
 	var greatestVal int
 
-	for k, v := range ds {
+	for k, v := range ds.data {
 		if v > greatestVal {
 			greatestKey = k
 			greatestVal = v

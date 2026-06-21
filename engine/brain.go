@@ -37,7 +37,7 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 	if len(rawSentences) != 0 {
 		for i := range len(rawSentences) {
 			data := NewUniqueElements()
-			refinedSentence := Sentence{mainContext: "unknown", data: data}
+			refinedSentence := Sentence{mainContext: "", data: data}
 			rawSentence := strings.Split(rawSentences[i], " ")
 			if len(rawSentence) != 0 {
 				for _, w := range rawSentence {
@@ -48,7 +48,7 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 						}
 					}
 					refinedWord := strings.Join(refinedLiterals, "")
-					refinedSentence.data.AddLiteral(refinedWord)
+					refinedSentence.data.AddElement(refinedWord)
 				}
 			}
 			refinedSentences = append(refinedSentences, refinedSentence)
@@ -64,28 +64,29 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 	if len(sentences) != 0 {
 		for i := range len(sentences) {
-			freqMap := FreqMap{}
+			data := make(map[string]int)
+			freqMap := FreqMap{data}
 			objectPatterns := NewUniqueElements()
 			for l_w := range sentences[i].data.data {
 				for _, cat := range uow.dataSet.Categories {
 					for pattern := range cat.Patterns {
 						if strings.Contains(l_w, pattern) {
-							objectPatterns.AddLiteral(pattern)
+							objectPatterns.AddElement(pattern)
 						}
 					}
 				}
 			}
 			for _, cat := range uow.dataSet.Categories {
-				freqMap[cat.Label] = len(objectPatterns.Intersection(cat.Patterns))
+				freqMap.data[cat.Label] = len(objectPatterns.Intersection(cat.Patterns))
 			}
 			greatestCat := freqMap.FindGreatestKey()
 
 			sentences[i].SetMainContext(greatestCat)
 
-			if sentences[i].GetMainContext() != "unknown" {
-				uow.knownData.AddSentence(sentences[i])
-			} else {
+			if greatestCat == "" {
 				uow.unknownData.AddSentence(sentences[i])
+			} else {
+				uow.knownData.AddSentence(sentences[i])
 			}
 		}
 	}
