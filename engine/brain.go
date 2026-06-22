@@ -42,9 +42,11 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 			if len(rawSentence) != 0 {
 				for _, w := range rawSentence {
 					var refinedLiterals []string
-					for j := range len(w) {
-						if (w[j] >= 65 && w[j] >= 90) || (w[j] >= 97 && w[j] >= 122) {
-							refinedLiterals = append(refinedLiterals, string(w[j]))
+					if len(w) >= 3 {
+						for j := range len(w) {
+							if (w[j] >= 65 && w[j] >= 90) || (w[j] >= 97 && w[j] >= 122) {
+								refinedLiterals = append(refinedLiterals, string(w[j]))
+							}
 						}
 					}
 					refinedWord := strings.Join(refinedLiterals, "")
