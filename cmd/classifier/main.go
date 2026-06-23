@@ -11,11 +11,8 @@ import (
 )
 
 func main() {
-	rawText := `
-	Capital Croissant makes 10,000 pastries a week in its bakery in Ealing, West London, supplying luxury hotels and cafes across the capital with frozen croissants and pains au chocolat. Francois Bonnefoy started the company in November, calling himself “the owner and co-founder, but also the delivery driver, the packer — everything.”
-	Tracking the manufacture of Bonnefoy’s viennoiserie gives an insight into the possible rise of food inflation started by the war in the Middle East. The baker sits close to the end of an international supply chain that’s come under enormous pressure over the past few months.
-	`
-	dataManager := engine.NewDataManager("./categories.json")
+	rawText := `This is the first sent*ence. This is the sec&ond sentence. Th#is is the third sentence`
+	dataManager := engine.NewDataManager("./test_dataset.json")
 	dataset, err := dataManager.LoadDataset()
 	if err != nil {
 		log.Fatalf("Could not load dataset: %s", err)
