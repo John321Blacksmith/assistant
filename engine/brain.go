@@ -71,7 +71,7 @@ func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 			objectPatterns := NewUniqueElements()
 			for l_w := range sentences[i].data.data {
 				for _, cat := range uow.dataSet.Categories {
-					for pattern := range cat.Patterns {
+					for pattern := range cat.Patterns.data {
 						if strings.Contains(l_w, pattern) {
 							objectPatterns.AddElement(pattern)
 						}
@@ -79,7 +79,7 @@ func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 				}
 			}
 			for _, cat := range uow.dataSet.Categories {
-				freqMap.data[cat.Label] = len(objectPatterns.Intersection(cat.Patterns))
+				freqMap.data[cat.Label] = objectPatterns.Intersection(cat.Patterns).Card()
 			}
 			greatestCat := freqMap.FindGreatestKey()
 

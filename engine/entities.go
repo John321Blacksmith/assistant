@@ -7,7 +7,7 @@ type Category struct {
 
 type RefinedCategory struct {
 	Label    string
-	Patterns map[string]bool
+	Patterns *UniqueElements
 }
 
 type Sentence struct {

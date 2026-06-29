@@ -1,16 +1,18 @@
 package engine
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestDatasetRefinement(t *testing.T) {
 	datasetPath := "../test_dataset.json"
 	dataManager := NewDataManager(datasetPath)
-
+	patterns := NewUniqueElements()
+	patterns.AddElement("sentence", "third", "this", "first")
 	TestDataSet := RefinedDataSet{
 		Categories: []RefinedCategory{
-			{Label: "test", Patterns: map[string]bool{"sentence": true, "third": true, "this": true, "first": true}},
+			{Label: "test", Patterns: patterns},
 		},
 	}
 
@@ -19,7 +21,7 @@ func TestDatasetRefinement(t *testing.T) {
 		if len(dataSet1.Categories) == len(dataSet2.Categories) {
 			for i, cat := range dataSet1.Categories {
 				if cat.Label == dataSet2.Categories[i].Label {
-					if len(cat.Patterns) == len(dataSet2.Categories[i].Patterns) {
+					if cat.Patterns.Card() == dataSet2.Categories[i].Patterns.Card() {
 						result = true
 						continue
 					}
@@ -45,7 +47,25 @@ func TestDatasetRefinement(t *testing.T) {
 
 }
 
-func TestUniqueElementsIntersection(t *testing.T) {}
+func TestUniqueElementsIntersection(t *testing.T) {
+	set1 := NewUniqueElements()
+	set1.AddElement("1", "2", "3", "4")
+
+	set2 := NewUniqueElements()
+	set2.AddElement("3", "4", "5", "6", "1")
+	t.Run("test intersection done well", func(t *testing.T) {
+		intersection := set1.Intersection(set2)
+		if len(intersection.data) != 0 {
+			result, err := intersection.Contains("3", "4")
+			if err != nil {
+				fmt.Println("The functon Intersection returned an error", err)
+			}
+			if result == false {
+				t.Error("The function Intersection does not return a valid result")
+			}
+		}
+	})
+}
 
 func TestFreqDictGreatestContext(t *testing.T) {}
 
