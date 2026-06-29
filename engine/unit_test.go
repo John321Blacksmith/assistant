@@ -67,8 +67,44 @@ func TestUniqueElementsIntersection(t *testing.T) {
 	})
 }
 
-func TestFreqDictGreatestContext(t *testing.T) {}
+func TestFreqMapGreatestContext(t *testing.T) {
+	testFreqMap := FreqMap{
+		data: map[string]int{
+			"one":   1,
+			"two":   2,
+			"three": 3,
+			"four":  4,
+			"five":  5,
+		},
+	}
+	want := "five"
+	t.Run("testing finding greatest context", func(t *testing.T) {
+		result := testFreqMap.FindGreatestKey()
+		if result != want {
+			t.Errorf("The function FreqMap.FindGreatestKey() does not retrun a top context: want - %s, returned - %s", want, result)
+		}
+	})
 
-func TestKnownDataStructWork(t *testing.T) {}
+}
+
+func TestKnownDataStructWork(t *testing.T) {
+	knownSentences := []Sentence{
+		{data: &UniqueElements{data: map[string]bool{}}, mainContext: ""},
+		{data: &UniqueElements{data: map[string]bool{"three": true, "four": true}}, mainContext: "four"},
+		{data: &UniqueElements{data: map[string]bool{"one": true, "two": true}}, mainContext: "two"},
+		{data: &UniqueElements{data: map[string]bool{"three": true, "four": true}}, mainContext: "four"},
+		{data: &UniqueElements{data: map[string]bool{"five": true, "four": true}}, mainContext: "five"},
+	}
+	knownData := KnownData{sentences: knownSentences}
+	want := "four"
+
+	t.Run("testing getting a document-level main context", func(t *testing.T) {
+		result := knownData.GetMainConext()
+		if result != want {
+			t.Errorf("The function KownData.GetMainContext() returns a wrong context: want - %s, returned - %s", want, result)
+		}
+	})
+
+}
 
 func TestUnknownDataStructWork(t *testing.T) {}
