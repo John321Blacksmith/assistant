@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+	"log/slog"
 	"testing"
 )
 
@@ -24,7 +25,7 @@ func TestInputProcess(t *testing.T) {
 		{name: "sentence objects length", want: 3},
 	}
 	t.Run(tests[0].name, func(t *testing.T) {
-		fmt.Println()
+		slog.Info("TestInputProcess")
 		if len(result) != tests[0].want {
 			t.Errorf("The function ProcessInput returns un enexpected amount of sentences. Returned: %d, want: %d", len(result), tests[0].want)
 		}
@@ -56,6 +57,7 @@ func TestRecognizeSentences(t *testing.T) {
 	}
 
 	t.Run(tests[0].name, func(t *testing.T) {
+		slog.Info("TestRecognizeSentences")
 		if (len(classifier.knownData.sentences) > 0) != tests[0].want {
 			t.Errorf("The function RecognizeSentences doesn't recognize sentences even though some of them are recognizable")
 		}

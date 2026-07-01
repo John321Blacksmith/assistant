@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+	"log/slog"
 	"testing"
 )
 
@@ -34,6 +35,7 @@ func TestDatasetRefinement(t *testing.T) {
 	wantErr := "Data set load error"
 
 	t.Run("test validity of dataset", func(t *testing.T) {
+		slog.Info("TestDatasetRefinement")
 		refinedDataSet, err := dataManager.LoadDataset()
 		if err != nil {
 			if wantErr != err.Error() {
@@ -54,6 +56,7 @@ func TestUniqueElementsIntersection(t *testing.T) {
 	set2 := NewUniqueElements()
 	set2.AddElement("3", "4", "5", "6", "1")
 	t.Run("test intersection done well", func(t *testing.T) {
+		slog.Info("TestUniqueElementsIntersection")
 		intersection := set1.Intersection(set2)
 		if len(intersection.data) != 0 {
 			result, err := intersection.Contains("3", "4")
@@ -79,6 +82,7 @@ func TestFreqMapGreatestContext(t *testing.T) {
 	}
 	want := "five"
 	t.Run("testing finding greatest context", func(t *testing.T) {
+		slog.Info("TestFreqMapGreatestContext")
 		result := testFreqMap.FindGreatestKey()
 		if result != want {
 			t.Errorf("The function FreqMap.FindGreatestKey() does not retrun a top context: want - %s, returned - %s", want, result)
@@ -99,6 +103,7 @@ func TestKnownDataStructWork(t *testing.T) {
 	want := "four"
 
 	t.Run("testing getting a document-level main context", func(t *testing.T) {
+		slog.Info("TestKnownDataStructWork")
 		result := knownData.GetMainConext()
 		if result != want {
 			t.Errorf("The function KownData.GetMainContext() returns a wrong context: want - %s, returned - %s", want, result)
