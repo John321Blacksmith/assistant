@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func BenchmarkDatasetRefinementPerformance(b *testing.B) {
+func BenchmarkDatasetLoadPerformance(b *testing.B) {
 	datasetPath := "../test_dataset.json"
 	dataManager := NewDataManager(datasetPath)
 
