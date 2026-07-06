@@ -29,35 +29,44 @@ func NewClassifier(dataSet *RefinedDataSet) *Classifier {
 	return &Classifier{dataSet: dataSet}
 }
 
+func refineWord(w string) []string {
+	var refinedWord []string
+	if len(w) < 3 {
+		return nil
+	}
+	for i := range len(w) {
+		if (w[i] >= 65 && w[i] >= 90) || (w[i] >= 97 && w[i] >= 122) {
+			refinedWord = append(refinedWord, string(w[i]))
+		}
+	}
+	return refinedWord
+}
+
 // take the raw text, clean and structure
 // to []Sentence
 func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 	var refinedSentences []Sentence
-	rawSentences := strings.Split(strings.Trim(strings.ToLower(rawData), "."), ". ")
-	if len(rawSentences) != 0 {
-		for i := range len(rawSentences) {
-			data := NewUniqueElements()
-			refinedSentence := Sentence{mainContext: "", data: data}
-			rawSentence := strings.Split(rawSentences[i], " ")
-			if len(rawSentence) != 0 {
-				for _, w := range rawSentence {
-					var refinedLiterals []string
-					if len(w) >= 3 {
-						for j := range len(w) {
-							if (w[j] >= 65 && w[j] >= 90) || (w[j] >= 97 && w[j] >= 122) {
-								refinedLiterals = append(refinedLiterals, string(w[j]))
-							}
-						}
-					}
-					refinedWord := strings.Join(refinedLiterals, "")
-					refinedSentence.data.AddElement(refinedWord)
-				}
-			}
-			refinedSentences = append(refinedSentences, refinedSentence)
+	trimmedData := strings.Trim(strings.ToLower(rawData), ".")
+	rawSentences := strings.Split(trimmedData, ". ")
+	if len(rawSentences) == 0 {
+		return []Sentence{}
+	}
+	for i := range len(rawSentences) {
+		refinedSentence := Sentence{mainContext: "", data: NewUniqueElements()}
+		if len(rawSentences[i]) == 0 {
+			return []Sentence{}
 		}
+		rawSentence := strings.Split(rawSentences[i], " ")
+		if len(rawSentence) == 0 {
+			return []Sentence{}
+		}
+		for _, w := range rawSentence {
+			refinedWord := refineWord(w)
+			refinedSentence.data.AddElement(strings.Join(refinedWord, ""))
+		}
+		refinedSentences = append(refinedSentences, refinedSentence)
 	}
 	return refinedSentences
-
 }
 
 // take the []Sentence, analyze each one
