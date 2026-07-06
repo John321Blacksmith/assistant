@@ -49,7 +49,7 @@ func BenchmarkClassificationPerformance(b *testing.B) {
 	classifier := NewClassifier(dataSet)
 	b.StartTimer()
 	for b.Loop() {
-		err = classifier.RecognizeSentences(refinedSentences)
+		err = classifier.RefactoredRecognizeSentences(refinedSentences)
 	}
 	b.StopTimer()
 	if err != nil {

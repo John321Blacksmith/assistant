@@ -5,6 +5,7 @@
 package engine
 
 import (
+	"errors"
 	"strings"
 )
 
@@ -72,34 +73,31 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 // take the []Sentence, analyze each one
 // using the predefined dataset and separate
 // known from unknown ones
-func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
-	if len(sentences) != 0 {
-		for i := range len(sentences) {
-			data := make(map[string]int)
-			freqMap := FreqMap{data}
-			objectPatterns := NewUniqueElements()
-			for l_w := range sentences[i].data.data {
-				for _, cat := range uow.dataSet.Categories {
-					for pattern := range cat.Patterns.data {
-						if strings.Contains(l_w, pattern) {
-							objectPatterns.AddElement(pattern)
-						}
+func (uow *Classifier) RefactoredRecognizeSentences(sentences []Sentence) error {
+	if len(sentences) == 0 {
+		return errors.New("No sentences taken from input")
+	}
+	for i := range len(sentences) {
+		data := make(map[string]int)
+		freqMap := FreqMap{data}
+		objectPatterns := NewUniqueElements()
+		for l_w := range sentences[i].data.data {
+			for _, cat := range uow.dataSet.Categories {
+				for pattern := range cat.Patterns.data {
+					if strings.Contains(l_w, pattern) {
+						objectPatterns.AddElement(pattern)
 					}
 				}
 			}
-			for _, cat := range uow.dataSet.Categories {
-				freqMap.data[cat.Label] = objectPatterns.Intersection(cat.Patterns).Card()
-			}
-			greatestCat := freqMap.FindGreatestKey()
-
-			sentences[i].SetMainContext(greatestCat)
-
-			if greatestCat == "" {
-				uow.unknownData.AddSentence(sentences[i])
-			} else {
-				uow.knownData.AddSentence(sentences[i])
-			}
 		}
+		for _, cat := range uow.dataSet.Categories {
+			freqMap.data[cat.Label] = objectPatterns.Intersection(cat.Patterns).Card()
+		}
+		greatestCat := freqMap.FindGreatestKey()
+		if greatestCat == "" {
+			uow.unknownData.AddSentence(sentences[i])
+		}
+		uow.knownData.AddSentence(sentences[i])
 	}
 	return nil
 }
