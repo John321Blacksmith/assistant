@@ -1,0 +1,13 @@
+{
+    "categories": [
+    {
+      "label": "test",
+      "patterns": [
+        "sentence",
+        "third",
+        "this",
+        "first"
+      ]
+    }
+]
+}

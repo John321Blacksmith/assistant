@@ -1,0 +1,19 @@
+{
+    "categories": [
+    {
+      "label": "failure",
+      "patterns": [
+      ]
+    },
+    {
+        "label": "growth",
+        "patterns": [
+        ]
+    },
+    {
+        "label": "inflation",
+        "patterns": [
+        ]
+    }
+]
+}  
