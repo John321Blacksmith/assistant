@@ -1,0 +1,13 @@
+{
+    "environment": "local",
+    "parsing": {
+        "datasetLocation": "../../categories.json"
+    },
+    "http": {
+        "host": "localhost",
+        "port": "8080"
+    },
+    "prometheus": {
+        "promAddress": "http://10.81.15.85:9000"
+    }
+}
