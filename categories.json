@@ -52,7 +52,7 @@
       "комн",
       "garden",
       "son",
-      " room",
+      "room",
       "flat",
       "party",
       "отд",
@@ -66,9 +66,12 @@
   {
     "label": "work",
     "patterns": [
+      "partnership",
+      "innovat",
       "income",
       "co-work",
       "friend",
+      "industr",
       "routine",
       "factor",
       "рутина",
@@ -166,7 +169,8 @@
       "класс",
       "librar",
       "book",
-      "knowledge"
+      "knowledge",
+      "practic"
     ]
   },
   {
@@ -188,6 +192,8 @@
       "сестра",
       "мам",
       "friend",
+      "love",
+      "kind",
       "mom",
       "семь",
       "mother",
