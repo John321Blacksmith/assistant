@@ -73,7 +73,7 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 // take the []Sentence, analyze each one
 // using the predefined dataset and separate
 // known from unknown ones
-func (uow *Classifier) RefactoredRecognizeSentences(sentences []Sentence) error {
+func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 	if len(sentences) == 0 {
 		return errors.New("No sentences taken from input")
 	}

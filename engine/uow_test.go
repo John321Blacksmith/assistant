@@ -89,7 +89,7 @@ func TestRecognizeSentences(t *testing.T) {
 	}
 
 	classifier := NewClassifier(dataSet)
-	classifier.RefactoredRecognizeSentences(refinedSentences)
+	classifier.RecognizeSentences(refinedSentences)
 
 	tests := []struct {
 		name string
