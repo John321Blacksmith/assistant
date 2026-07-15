@@ -75,7 +75,7 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 // known from unknown ones
 func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 	if len(sentences) == 0 {
-		return errors.New("No sentences taken from input")
+		return errors.New("no sentences taken from input")
 	}
 	for i := range len(sentences) {
 		data := make(map[string]int)
@@ -88,16 +88,17 @@ func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 						objectPatterns.AddElement(pattern)
 					}
 				}
+				freqMap.data[cat.Label] = objectPatterns.Intersection(cat.Patterns).Card()
 			}
 		}
-		for _, cat := range uow.dataSet.Categories {
-			freqMap.data[cat.Label] = objectPatterns.Intersection(cat.Patterns).Card()
-		}
+
 		greatestCat := freqMap.FindGreatestKey()
+		sentences[i].SetMainContext(greatestCat)
 		if greatestCat == "" {
 			uow.unknownData.AddSentence(sentences[i])
+		} else {
+			uow.knownData.AddSentence(sentences[i])
 		}
-		uow.knownData.AddSentence(sentences[i])
 	}
 	return nil
 }
