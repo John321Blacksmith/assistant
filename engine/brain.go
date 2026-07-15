@@ -54,14 +54,8 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 	}
 	for i := range len(rawSentences) {
 		refinedSentence := Sentence{mainContext: "", data: NewUniqueElements()}
-		if len(rawSentences[i]) == 0 {
-			return []Sentence{}
-		}
-		rawSentence := strings.Split(rawSentences[i], " ")
-		if len(rawSentence) == 0 {
-			return []Sentence{}
-		}
-		for _, w := range rawSentence {
+		rawSentence := strings.SplitSeq(rawSentences[i], " ")
+		for w := range rawSentence {
 			refinedWord := refineWord(w)
 			refinedSentence.data.AddElement(strings.Join(refinedWord, ""))
 		}
