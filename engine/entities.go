@@ -12,7 +12,7 @@ type RefinedCategory struct {
 
 type Sentence struct {
 	data        *UniqueElements
-	mainContext string
+	MainContext string
 }
 
 func (entity *Sentence) GetData() map[string]bool {
@@ -20,9 +20,9 @@ func (entity *Sentence) GetData() map[string]bool {
 }
 
 func (entity *Sentence) GetMainContext() string {
-	return entity.mainContext
+	return entity.MainContext
 }
 
 func (entity *Sentence) SetMainContext(context string) {
-	entity.mainContext = context
+	entity.MainContext = context
 }

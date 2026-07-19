@@ -98,7 +98,7 @@ func (ds *KnownData) AddSentence(sentence Sentence) {
 func (ds *KnownData) GetMainConext() string {
 	var contexts []string
 	for _, s := range ds.sentences {
-		contexts = append(contexts, s.mainContext)
+		contexts = append(contexts, s.MainContext)
 	}
 	data := make(map[string]int)
 	freqMap := FreqMap{data}

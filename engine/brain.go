@@ -22,6 +22,7 @@ type Classifier struct {
 	mainContext string
 	knownData   KnownData
 	unknownData UnknownData
+	Sentences   []Sentence
 }
 
 // instantiate a new Classifier object
@@ -53,7 +54,7 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 		return []Sentence{}
 	}
 	for i := range len(rawSentences) {
-		refinedSentence := Sentence{mainContext: "", data: NewUniqueElements()}
+		refinedSentence := Sentence{MainContext: "", data: NewUniqueElements()}
 		rawSentence := strings.SplitSeq(rawSentences[i], " ")
 		for w := range rawSentence {
 			refinedWord := refineWord(w)
@@ -88,11 +89,12 @@ func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 
 		greatestCat := freqMap.FindGreatestKey()
 		sentences[i].SetMainContext(greatestCat)
-		if greatestCat == "" {
-			uow.unknownData.AddSentence(sentences[i])
-		} else {
-			uow.knownData.AddSentence(sentences[i])
-		}
+		// if greatestCat == "" {
+		// 	uow.unknownData.AddSentence(sentences[i])
+		// } else {
+		// 	uow.knownData.AddSentence(sentences[i])
+		// }
+		uow.Sentences = append(uow.Sentences, sentences[i])
 	}
 	return nil
 }
