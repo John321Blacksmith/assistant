@@ -7,67 +7,52 @@ package main
 import (
 	"classifier/engine"
 	"fmt"
-	"log"
 )
 
-func ingestData(inp string, classifier *engine.Classifier) <-chan engine.Sentence {
-	outProcessed := make(chan engine.Sentence)
-	go func() {
-		defer close(outProcessed)
-		sentences := classifier.ProcessInput(inp)
-		for i := range len(sentences) {
-			outProcessed <- sentences[i]
-		}
-	}()
-	return outProcessed
-}
+// STAGES
+// 													| -> findMainContext
+// ingestData -> classifyData -> orchestrateData -> |
+// 													| -> processUnknownData
 
-func orchestrateData(inp <-chan engine.Sentence, classifier *engine.Classifier) (<-chan engine.Sentence, <-chan engine.Sentence) {
-	outKnown := make(chan engine.Sentence)
-	outUnknown := make(chan engine.Sentence)
-	sentences := []engine.Sentence{}
+// DATA PIPELINE
+// 							| -> KnownData
+// rawData -> []Sentence -> |
+//							| -> UnknownData -> ClusteredData
 
-	go func() {
-		for s := range inp {
-			sentences = append(sentences, s)
-		}
-	}()
-	go func() {
-		defer close(outKnown)
-		defer close(outUnknown)
+// PROCESS
+//																								 | -> KnownData -> findMainContext()
+// rawData -> ingestData() -> []Sentence -> classifyData() -> []Sentence -> orchestrateData() -> |
+//																								 | -> UnknownData -> processUnknownData() -> ClusteredData
 
-		classifier.RecognizeSentences(sentences)
+// ingestData takes rawData
+// from client and returns
+// a channel with []Sentence.
+func ingestData(inp string) chan<- engine.Sentence
 
-		for _, s := range classifier.Sentences {
-			switch s.MainContext {
-			case "":
-				outUnknown <- s
-			default:
-				outKnown <- s
-			}
-		}
-	}()
-	return outKnown, outUnknown
-}
+// classifyData takes a channel
+// with []Sentence and classifies
+// each Sentence. Returns a channel
+// with []ClassifiedSentence.
+func classifyData(inp chan<- engine.Sentence) chan<- engine.Sentence
+
+// orchestrateData takes a channel
+// with ClassifiedSentence, delivers
+// the classified ones to both Known/Unknown
+// data channels and returns these ones.
+func orchestrateData(inp chan<- engine.Sentence) (chan<- engine.Sentence, chan<- engine.Sentence)
+
+// findMainContext takes a channel
+// with KnownData and finds an overall
+// topic of the whole text. Returns
+// a string of the main context.
+func findMainContext(inp chan<- engine.Sentence) string
+
+// processUnknownData takes a channel
+// with UnknownData and clusterizes the
+// the literals collection. Returns a
+// a probabalistic dataset
+func processUnknownData(inp chan<- engine.Sentence) engine.DataSet
 
 func main() {
-	// rawText := `Yields on German benchmark 10-year bonds rose seven basis points to 3.07%, their highest in nearly a month and climbing for an eighth straight day in the longest streak since January. French debt suffered even more, also weighed down by political uncertainty following Marine Le Pen’s decision to run in next year’s presidential election. US 10-year yields were two basis points higher at 4.57%.
-	// 			tire, фитн, gym, muscle, water, форма, спорт, вода, мышmuscle, график.run, exercis, schedule, упражн, питат, nutri, здоров, sport, shape, health, rest
-	// 			In the final, the seeded under the ninth number of Noskova outplayed her compatriot, the tenth racket of the tournament Karolina Mukhova, with a score of 6:2, 5:7, 6:3. The meeting lasted 2 hours 28 minutes. In the second set, Mukhova played five matches. `
-
-	rawText2 := `
-	Министерство иностранных дел России уведомило недружественные страны Запада о неприемлемости размещения войск "коалиции желающих" на территории Украины. Если эти страны отправят солдат на украинские территории - ВС РФ будут рассматривать их как законные цели, препятствующие достижению задач спецоперации.
-	`
-	dataManager := engine.NewDataManager("./categories.json")
-	dataset, err := dataManager.LoadDataset()
-	if err != nil {
-		log.Fatalf("Could not load dataset: %s", err)
-	}
-	classifier := engine.NewClassifier(dataset)
-	processedData := ingestData(rawText2, classifier)
-	knownData, unknownData := orchestrateData(processedData, classifier)
-
-	fmt.Println("recognized:  ", knownData)
-	fmt.Println("not recognized:  ", unknownData)
-
+	fmt.Println("hello, world")
 }
