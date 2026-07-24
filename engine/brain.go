@@ -54,11 +54,11 @@ func (uow *Classifier) ProcessInput(rawData string) []Sentence {
 		return []Sentence{}
 	}
 	for i := range len(rawSentences) {
-		refinedSentence := Sentence{MainContext: "", data: NewUniqueElements()}
+		refinedSentence := Sentence{MainContext: "", Data: NewUniqueElements()}
 		rawSentence := strings.SplitSeq(rawSentences[i], " ")
 		for w := range rawSentence {
 			refinedWord := refineWord(w)
-			refinedSentence.data.AddElement(strings.Join(refinedWord, ""))
+			refinedSentence.Data.AddElement(strings.Join(refinedWord, ""))
 		}
 		refinedSentences = append(refinedSentences, refinedSentence)
 	}
@@ -76,7 +76,7 @@ func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 		data := make(map[string]int)
 		freqMap := FreqMap{data}
 		objectPatterns := NewUniqueElements()
-		for l_w := range sentences[i].data.data {
+		for l_w := range sentences[i].Data.data {
 			for _, cat := range uow.dataSet.Categories {
 				for pattern := range cat.Patterns.data {
 					if strings.Contains(l_w, pattern) {

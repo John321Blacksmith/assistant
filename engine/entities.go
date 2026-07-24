@@ -11,12 +11,12 @@ type RefinedCategory struct {
 }
 
 type Sentence struct {
-	data        *UniqueElements
+	Data        *UniqueElements
 	MainContext string
 }
 
 func (entity *Sentence) GetData() map[string]bool {
-	return entity.data.data
+	return entity.Data.data
 }
 
 func (entity *Sentence) GetMainContext() string {
