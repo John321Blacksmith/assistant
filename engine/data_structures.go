@@ -95,7 +95,7 @@ func (ds *KnownData) AddSentence(sentence Sentence) {
 
 // Find the main context of the known
 // []Sentence
-func (ds *KnownData) GetMainConext() string {
+func (ds *KnownData) GetMainContext() string {
 	var contexts []string
 	for _, s := range ds.sentences {
 		contexts = append(contexts, s.mainContext)

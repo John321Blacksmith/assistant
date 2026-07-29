@@ -99,7 +99,7 @@ func (uow *Classifier) RecognizeSentences(sentences []Sentence) error {
 
 // take the KnownData and get a main context
 func (uow *Classifier) GetMainContext() string {
-	return uow.knownData.GetMainConext()
+	return uow.knownData.GetMainContext()
 }
 
 func GetUnknownData(classifier *Classifier) []Sentence {
