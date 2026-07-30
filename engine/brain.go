@@ -109,3 +109,13 @@ func GetUnknownData(classifier *Classifier) []Sentence {
 func GetKnownData(classifier *Classifier) []Sentence {
 	return classifier.knownData.sentences
 }
+
+// DiscardCollection washes up old known data
+// collection so it's fresh for a new request
+func DiscardCollection(classifier *Classifier) error {
+	if len(classifier.knownData.sentences) == 0 {
+		return errors.New("Attempt to discard an empty collection")
+	}
+	classifier.knownData.sentences = []Sentence{}
+	return nil
+}
