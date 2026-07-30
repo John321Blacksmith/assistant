@@ -72,7 +72,10 @@ func ingestData(inp string) (<-chan engine.Sentence, <-chan error) {
 // with []Sentence and classifies
 // each Sentence. Returns a channel
 // with []ClassifiedSentence.
-func classifyData(inp chan<- engine.Sentence) chan<- engine.Sentence
+func classifyData(inp chan<- engine.Sentence) chan<- engine.Sentence {
+	out := make(chan engine.Sentence)
+	return out
+}
 
 // orchestrateData takes a channel
 // with ClassifiedSentence, delivers
@@ -84,13 +87,19 @@ func classifyData(inp chan<- engine.Sentence) chan<- engine.Sentence
 // with KnownData and finds an overall
 // topic of the whole text. Returns
 // a string of the main context.
-func findMainContext(inp chan<- engine.Sentence) string
+func findMainContext(inp chan<- engine.Sentence) string {
+	var mainContext string
+	return mainContext
+}
 
 // processUnknownData takes a channel
 // with UnknownData and clusterizes the
 // the literals collection. Returns a
 // a probabalistic dataset
-func processUnknownData(inp chan<- engine.Sentence) engine.DataSet
+func processUnknownData(inp chan<- engine.Sentence) engine.DataSet {
+	var dataset engine.DataSet
+	return dataset
+}
 
 func main() {
 	text1 := ` processUnknownData takes a channel
