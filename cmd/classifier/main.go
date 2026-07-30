@@ -27,6 +27,7 @@ func (s *ClassifierServer) GetMainContext(ctx context.Context, in *pb.BotRequest
 	sentences := s.classifier.ProcessInput(in.Input)
 	s.classifier.RecognizeSentences(sentences)
 	mainContext := s.classifier.GetMainContext()
+	engine.DiscardCollection(s.classifier)
 	return &pb.Response{Output: fmt.Sprintf("You are talking about %s", mainContext)}, nil
 }
 
