@@ -1,16 +1,11 @@
-[tool.poetry]
-name = "bot"
+[project]
+name = "bot3"
 version = "0.1.0"
 description = "bot component for interaction with social media API"
-authors = ["John321Blacksmith <kuzmichevi321@gmail.com>"]
+authors = [{ name = "John321Blacksmith", email = "kuzmichevi321@gmail.com" }]
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-grpcio = "^1.83.0"
-grpcio-tools = "^1.83.0"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.12"
+dependencies = [
+    "grpcio>=1.83.1",
+    "grpcio-tools>=1.83.1",
+]
