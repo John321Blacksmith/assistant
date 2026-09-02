@@ -59,20 +59,38 @@ func TestInputProcess(t *testing.T) {
 	}
 
 	classifier := NewClassifier(dataSet)
-	result := classifier.ProcessInput(rawData)
+	results := classifier.ProcessInput(rawData)
+	validData := [][]string{
+		{"this", "first", "sentence", "the"},
+		{"this", "second", "sentence", "the"},
+		{"this", "third", "sentence", "the"},
+	}
 
 	tests := []struct {
 		name string
 		want any
 	}{
 		{name: "sentence objects length", want: 3},
+		{name: "sample of sentence", want: true},
 	}
-	t.Run(tests[0].name, func(t *testing.T) {
-		slog.Info("TestInputProcess")
-		if len(result) != tests[0].want {
-			t.Errorf("The function ProcessInput returns un enexpected amount of sentences. Returned: %d, want: %d", len(result), tests[0].want)
-		}
-	})
+	for i := range len(tests) {
+		t.Run(tests[i].name, func(t *testing.T) {
+			slog.Info("TestInputProcess")
+			switch i {
+			case 0:
+				if len(results) != tests[i].want {
+					t.Errorf("The function ProcessInput returns un enexpected amount of sentences. Returned: %d, want: %d", len(results), tests[0].want)
+				}
+			case 1:
+				for j := range len(results) {
+					contains, _ := results[j].data.Contains(validData[j]...)
+					if contains != tests[i].want {
+						t.Errorf("Sample of sentence is not formed the right way. Got: %v, want: %v", results[1].data.data, tests[i].want)
+					}
+				}
+			}
+		})
+	}
 }
 
 func TestRecognizeSentences(t *testing.T) {

@@ -61,7 +61,7 @@ func TestKnownDataStructWork(t *testing.T) {
 
 	t.Run("testing getting a document-level main context", func(t *testing.T) {
 		slog.Info("TestKnownDataStructWork")
-		result := knownData.GetMainConext()
+		result := knownData.GetMainContext()
 		if result != want {
 			t.Errorf("The function KownData.GetMainContext() returns a wrong context: want - %s, returned - %s", want, result)
 		}

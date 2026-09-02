@@ -48,7 +48,7 @@ func BenchmarkKnownDataStructMainContext(b *testing.B) {
 	knownData := KnownData{sentences: knownSentences}
 
 	for b.Loop() {
-		result := knownData.GetMainConext()
+		result := knownData.GetMainContext()
 		slog.Debug("GetMainConext", "result", result)
 	}
 }
