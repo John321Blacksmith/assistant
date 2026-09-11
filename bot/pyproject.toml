@@ -8,5 +8,8 @@ requires-python = ">=3.12"
 dependencies = [
     "grpcio>=1.83.1",
     "grpcio-tools>=1.83.1",
+    "loguru>=0.7.3",
+    "python-dotenv>=1.2.3",
+    "uvloop>=0.22.1",
     "vkbottle>=4.11.0",
 ]
