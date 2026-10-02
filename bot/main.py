@@ -21,14 +21,25 @@ bot = Bot(token=token)
 
 @bot.on.message()
 async def handle_message(message: Message):
-    response: str
+    output: str
+    users_info = await bot.api.users.get(user_ids=message.from_id)
+    first_name = users_info[0].first_name
 
     with grpc.insecure_channel(f"{classifierIP}:{classifierPort}") as ch:
         clientStub = classifier_pb2_grpc.ClassifierStub(ch)
         request = classifier_pb2.BotRequest(input=message.text)
-        response = clientStub.GetMainContext(request)
+        resp = clientStub.GetMainContext(request)
 
-    return await message.answer(message=f'you are talking about {response}')
+        if resp:
+            output = resp.output
+
+    if output == "greetings":
+        return await message.answer(message=f"Hello, {first_name}")
+
+    elif output == "planning":
+        return await message.answer(message=f"Okay, let's plan for some day your task")
+    else:
+        return await message.answer(message=f"You're talking about {output}")
 
 
 if __name__ == '__main__':
