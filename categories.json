@@ -215,6 +215,29 @@
       "cousin",
       "grandfather"
     ]
+  },
+  {
+    "label": "greetings",
+    "patterns": [
+      "start",
+      "hello",
+      "привет"
+    ]
+  },
+  {
+    "label": "planning",
+    "patterns": [
+      "tomorrow",
+      "want",
+      "need",
+      "next",
+      "plan",
+      "schedul",
+      "job",
+      "task",
+      "note",
+      "remind"
+    ]
   }
 ]
 }
