@@ -3,4 +3,5 @@ __pycache__/
 *.env
 **/.env
 bot/.env
+bot/.vkbottle/
 !.env.example
